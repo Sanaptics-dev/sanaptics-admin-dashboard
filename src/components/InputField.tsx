@@ -2,6 +2,7 @@
 import React from 'react';
 
 interface InputFieldProps {
+  id?: string;
   type?: string;
   placeholder: string;
   value: string;
@@ -12,6 +13,7 @@ interface InputFieldProps {
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
+  id,
   type = 'text',
   placeholder,
   value,
@@ -21,14 +23,16 @@ export const InputField: React.FC<InputFieldProps> = ({
   className = ''
 }) => {
   return (
-    <div className={`input-field ${className}`}>
+    <div className={`input-field`}>
       {icon && <span className="input-icon">{icon}</span>}
       <input
+        id={id}
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="input"
+        className={`input ${className}`}
+        disabled={disabled}
       />
     </div>
   );

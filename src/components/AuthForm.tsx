@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { InputField } from './InputField';
-import { Button } from './Button';
+import styles from '../pages/Auth/SignIn.module.css';
 
 interface AuthFormProps {
   className?: string;
@@ -33,38 +33,55 @@ export const AuthForm: React.FC<AuthFormProps> = ({ className = '' }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`auth-form ${className}`}>
-      <InputField
-        type="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={(value) => handleChange('email', value)}
-        disabled={loading}
-      />
-
-      <InputField
-        type="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={(value) => handleChange('password', value)}
-        disabled={loading}
-      />
-
-      <a href="#" className="forgot-password">Forgot Password?</a>
-
-      {error && (
-        <div className="error-message">
-          {error}
+    <>
+      <form onSubmit={handleSubmit} className={`${className}`}>
+        <div className={styles.formGroup}>
+          <label htmlFor="email">Email Address</label>
+          <InputField
+            id="email"
+            type="email"
+            placeholder="name@synaptics.com"
+            value={formData.email}
+            onChange={(value) => handleChange('email', value)}
+            disabled={loading}
+            className={styles.formControl}
+          />
         </div>
-      )}
 
-      <Button
-        type="submit"
-        variant="primary"
-        disabled={loading}
-      >
-        {loading ? 'Processing...' : 'Login'}
-      </Button>
-    </form>
+        <div className={styles.formGroup}>
+          <label htmlFor="password">Password</label>
+          <InputField
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            value={formData.password}
+            onChange={(value) => handleChange('password', value)}
+            disabled={loading}
+            className={styles.formControl}
+          />
+        </div>
+
+        <div className={styles.optionsRow}>
+            <label className={styles.checkboxLabel}>
+                <input type="checkbox" />
+                Keep me logged in
+            </label>
+            <a href="#" className={styles.forgotLink}>Forgot password?</a>
+        </div>
+
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
+
+        <button type="submit" className={styles.btnPrimary} disabled={loading}>
+          {loading ? 'Processing...' : 'Sign in'}
+        </button>
+      </form>
+      <div className={styles.signupText}>
+          Don't have an account? <a href="#">Sign up</a>
+      </div>
+    </>
   );
 };
