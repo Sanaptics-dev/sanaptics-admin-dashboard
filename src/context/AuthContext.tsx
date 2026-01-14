@@ -1,9 +1,16 @@
 // context/AuthContext.tsx
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 interface User {
   id: string;
   email: string;
+  name: string;
+}
+
+// New interface for mock user data including password
+interface AuthCredentials {
+  email: string;
+  password: string;
   name: string;
 }
 
@@ -32,6 +39,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Hardcoded mock users
+  const mockUsers: AuthCredentials[] = [
+    { email: "user1@example.com", password: "password1", name: "Palesa" },
+    { email: "user2@example.com", password: "password2", name: "Lungile" },
+  ];
+
   // Mock login function - replace with actual API call
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -39,29 +52,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     try {
       // short artificial delay to simulate API call
-      await new Promise(resolve => setTimeout(resolve, 600));
+      // await new Promise(resolve => setTimeout(resolve, 600));
 
-      // Read admin credentials from Vite env
-      const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL as string | undefined;
-      const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD as string | undefined;
+      const userByEmail = mockUsers.find(
+        (mockUser) => mockUser.email === email
+      );
 
-      if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
-        throw new Error('Admin credentials are not configured. Set VITE_ADMIN_EMAIL and VITE_ADMIN_PASSWORD in your .env file.');
+      if (!userByEmail) {
+        throw new Error('User not found');
       }
 
-      // Validate credentials (exact match)
-      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        const mockUser: User = {
-          id: '1',
-          email,
-          name: 'Admin User'
-        };
-        setUser(mockUser);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        localStorage.setItem('token', 'mock-jwt-token');
-      } else {
-        throw new Error('Invalid email or password');
+      if (userByEmail.password !== password) {
+        throw new Error('Invalid password');
       }
+
+      // If both email and password are correct
+      const loggedInUser: User = {
+        id: userByEmail.email, // Using email as ID for mock purposes
+        email: userByEmail.email,
+        name: userByEmail.name
+      };
+      setUser(loggedInUser);
+      localStorage.setItem('user', JSON.stringify(loggedInUser));
+      localStorage.setItem('token', 'mock-jwt-token'); // Store a mock token
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
       throw err;
@@ -76,10 +89,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // await new Promise(resolve => setTimeout(resolve, 1000));
       
       const mockUser: User = {
-        id: '1',
+        id: email, // Using email as ID for mock purposes
         email,
         name
       };

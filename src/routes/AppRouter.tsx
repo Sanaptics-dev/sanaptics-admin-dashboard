@@ -4,6 +4,7 @@ import Dashboard from "../features/DashboardSummary/pages/Dashboard";
 import Onboarding from "../features/SchoolOnboarding/pages/Onboarding";
 import Schools from "../features/ListOfOnboardedSchools/pages/Schools";
 import SchoolDetails from "../features/ListOfOnboardedSchools/pages/SchoolDetails";
+import { AuthPage } from "../pages/AuthPage";
 
 const AppRouter = () => {
   return (
