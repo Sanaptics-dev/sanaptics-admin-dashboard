@@ -1,116 +1,87 @@
 import { useState } from 'react';
 import { Search, Eye, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-// Mock data (replace with real API fetch later)
-const mockSchools = [
-  {
-    id: '1',
-    name: 'Johannesburg High School',
-    type: 'Public',
-    address: '123 Main Rd, Sandton',
-    principal: 'Dr. Thabo Mokoena',
-    email: 'principal@johannesburghs.co.za',
-    phone: '+27 11 234 5678',
-    onboardedAt: '2025-11-15',
-    status: 'Active',
-  },
-  {
-    id: '2',
-    name: 'Cape Town International College',
-    type: 'Private',
-    address: '45 Ocean View, Camps Bay',
-    principal: 'Ms. Sarah Johnson',
-    email: 'admin@cticollege.edu',
-    phone: '+27 21 987 6543',
-    onboardedAt: '2025-12-03',
-    status: 'Active',
-  },
-  // Add more mock entries as needed...
+const MOCK_SCHOOLS = [
+  { id: '1', name: 'Johannesburg High School', type: 'Public', address: '123 Main Rd, Sandton', principal: 'Dr. Thabo Mokoena', onboarded: '2025/11/15' },
+  { id: '2', name: 'Cape Town International College', type: 'Private', address: '45 Ocean View, Camps Bay', principal: 'Ms. Sarah Johnson', onboarded: '2025/12/03' },
+  { id: '3', name: 'Pretoria Tech Academy', type: 'Private', address: '88 Silver Lakes, Pretoria', principal: 'Mr. John Dube', onboarded: 'Pending' },
 ];
 
 export default function Schools() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const navigate = useNavigate();
 
-  // Simple client-side filtering
-  const filteredSchools = mockSchools.filter((school) =>
-    school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    school.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    school.principal.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter Logic
+  const filteredSchools = MOCK_SCHOOLS.filter(s =>
+    s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.principal.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination
-  const totalPages = Math.ceil(filteredSchools.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedSchools = filteredSchools.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = 2; // Mock total pages
 
   return (
-    <div className="p-6 md:p-10">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-white">List of Onboarded Schools</h1>
-          <p className="text-gray-400 mt-2">
-            View and manage all schools that have been onboarded to the Sanaptics platform ({filteredSchools.length} total).
-          </p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search by name, address, or principal..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); // Reset to first page on search
-            }}
-            className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          />
-        </div>
+    <div className="space-y-8 p-6 lg:p-8 bg-gray-50 min-h-screen">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-4xl font-extrabold text-slate-900 leading-tight">List of Onboarded Schools</h1>
+        <p className="text-lg text-slate-600 mt-2">View and manage all schools ({filteredSchools.length} total).</p>
       </div>
 
-      {/* Table */}
-      <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+      {/* Search Bar */}
+      <div className="relative max-w-lg">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Search by name, address, or principal..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+        />
+      </div>
+
+      {/* Table Card */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-gray-900/70">
+          <table className="min-w-full text-left">
+            <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-300">School Name</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-300 hidden md:table-cell">Type</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-300 hidden lg:table-cell">Address</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-300">Principal</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-300 hidden md:table-cell">Onboarded</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-300">Actions</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">School Name</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">Type</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">Address</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Principal</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">Onboarded</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {paginatedSchools.length > 0 ? (
-                paginatedSchools.map((school) => (
-                  <tr
-                    key={school.id}
-                    className="border-t border-gray-700 hover:bg-gray-700/50 transition"
-                  >
-                    <td className="px-6 py-4 font-medium text-white">{school.name}</td>
-                    <td className="px-6 py-4 text-gray-300 hidden md:table-cell">{school.type}</td>
-                    <td className="px-6 py-4 text-gray-300 hidden lg:table-cell">{school.address}</td>
-                    <td className="px-6 py-4 text-gray-300">{school.principal}</td>
-                    <td className="px-6 py-4 text-gray-400 hidden md:table-cell">
-                      {new Date(school.onboardedAt).toLocaleDateString('en-ZA')}
+            <tbody className="divide-y divide-gray-100">
+              {filteredSchools.length > 0 ? (
+                filteredSchools.map((school) => (
+                  <tr key={school.id} className="hover:bg-blue-50 transition-colors duration-200 group">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="font-semibold text-slate-900">{school.name}</span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <Link
-                          to={`/schools/${school.id}`}
-                          className="text-blue-400 hover:text-blue-300 transition flex items-center gap-1"
+                    <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        school.type === 'Public' ? 'bg-gray-100 text-gray-700 border border-gray-200' : 'bg-purple-100 text-purple-700 border border-purple-200'
+                      }`}>
+                        {school.type}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-600 hidden lg:table-cell">{school.address}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-700 font-medium">{school.principal}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-500 hidden md:table-cell">{school.onboarded}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => navigate(`/schools/${school.id}`)}
+                          className="text-blue-600 hover:bg-blue-100 p-2 rounded-full transition-colors duration-200"
+                          title="View Details"
                         >
                           <Eye className="w-4 h-4" />
-                          <span className="hidden sm:inline">View Details</span>
-                        </Link>
-                        <button className="text-gray-400 hover:text-white transition">
+                        </button>
+                        <button className="text-gray-500 hover:bg-gray-100 p-2 rounded-full hover:text-gray-700 transition-colors duration-200">
                           <MoreVertical className="w-5 h-5" />
                         </button>
                       </div>
@@ -119,8 +90,8 @@ export default function Schools() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-400">
-                    No schools found matching your search.
+                  <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
+                    No schools found matching "{searchTerm}".
                   </td>
                 </tr>
               )}
@@ -129,33 +100,28 @@ export default function Schools() {
         </div>
 
         {/* Pagination */}
-        {filteredSchools.length > 0 && (
-          <div className="px-6 py-4 border-t border-gray-700 flex items-center justify-between flex-wrap gap-4">
-            <div className="text-sm text-gray-400">
-              Showing {startIndex + 1}–{Math.min(startIndex + itemsPerPage, filteredSchools.length)} of {filteredSchools.length}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <span className="px-4 py-2 text-sm font-medium text-gray-300">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+        <div className="px-6 py-4 border-t border-gray-200 bg-white rounded-b-xl flex items-center justify-between">
+          <span className="text-sm text-slate-600">Showing {Math.max(1, filteredSchools.length)} results</span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="p-2 rounded-full bg-white border border-gray-300 text-gray-600 hover:border-blue-500 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <span className="px-4 py-2 text-sm font-semibold text-slate-900 bg-gray-100 border border-gray-300 rounded-full">
+              Page {currentPage}
+            </span>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-full bg-white border border-gray-300 text-gray-600 hover:border-blue-500 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

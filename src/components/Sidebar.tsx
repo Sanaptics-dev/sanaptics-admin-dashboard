@@ -1,51 +1,76 @@
-import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  School, 
-  ListChecks, 
-  Settings 
-} from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { LayoutDashboard, GraduationCap, ListChecks } from 'lucide-react';
 
-const navItems = [
-  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard Summary" },
-  { to: "/onboarding", icon: School, label: "School Onboarding" },
-  { to: "/schools", icon: ListChecks, label: "List of Onboarded Schools" },
-  { to: "/settings", icon: Settings, label: "Settings" },
-];
+const Sidebar = () => {
+  const location = useLocation();
 
-export default function Sidebar() {
+  // Helper to check if link is active
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <aside className="hidden md:flex md:flex-col w-64 bg-sanaptics-dark text-white h-screen border-r border-sanaptics-dark-hover">
-      {/* Logo + App Name */}
-      <div className="p-6 border-b border-sanaptics-dark-hover">
-        <div className="flex items-center gap-3">
-          {/* REPLACE THIS WITH YOUR ACTUAL LOGO */}
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg">
-            S
-          </div>
-          <h1 className="text-2xl font-semibold tracking-tight">Sanaptics</h1>
-        </div>
+    <aside className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col fixed left-0 top-0 z-20 shadow-lg">
+      {/* --- LOGO SECTION --- */}
+      <div className="p-6 border-b border-gray-100 flex justify-center items-center">
+        <img
+          src="https://z-cdn-media.chatglm.cn/files/6455cb60-e39c-41ae-808c-85e625845daf.png?auth_key=1868321048-6c67801ab89849c4852733cf1786a342-0-ac609033a3a55d986f8f919927601460"
+          alt="Sanaptic Logo"
+          className="w-full max-w-[200px] h-auto object-contain"
+        />
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-6 space-y-1">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
-                isActive
-                  ? 'bg-sanaptics-dark-active text-white'
-                  : 'text-gray-300 hover:bg-sanaptics-dark-hover hover:text-white'
-              }`
-            }
-          >
-            <item.icon className="w-5 h-5" />
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
+      {/* --- MENU LABEL --- */}
+      <div className="px-6 pt-8 pb-4">
+        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+          Menu
+        </span>
+      </div>
+
+      {/* --- NAVIGATION LINKS --- */}
+      <nav className="flex-1 px-4 py-2 overflow-y-auto">
+        <ul className="space-y-2">
+          <li>
+            <Link
+              to="/dashboard"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors duration-200 ${
+                isActive('/dashboard')
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+              }`}
+            >
+              <LayoutDashboard className="w-5 h-5" />
+              Dashboard Summary
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/onboarding"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors duration-200 ${
+                isActive('/onboarding')
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+              }`}
+            >
+              <GraduationCap className="w-5 h-5" />
+              School Onboarding
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/schools"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors duration-200 ${
+                isActive('/schools')
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+              }`}
+            >
+              <ListChecks className="w-5 h-5" />
+              List of Onboarded Schools
+            </Link>
+          </li>
+        </ul>
       </nav>
     </aside>
   );
-}
+};
+
+export default Sidebar;
