@@ -1,9 +1,8 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import Topbar from "../components/Topbar";
 import { useAuth } from "../context/AuthContext";
-
-const AdminLayout = () => {
+import { Search } from "lucide-react";
+const AdminLayout = () => { 
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
@@ -45,10 +44,12 @@ const AdminLayout = () => {
         {/* PAGE CONTENT - MUST USE OUTLET */}
         {/* This is where your Dashboard, Onboarding, Schools pages will appear */}
         <main className="flex-1 overflow-y-auto p-8">
-          <RouterOutlet />
+          <Outlet />
         </main>
 
       </div>
     </div>
   );
 }
+
+export default AdminLayout;

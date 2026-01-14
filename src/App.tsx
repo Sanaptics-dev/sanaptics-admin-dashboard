@@ -1,28 +1,22 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AdminLayout from './layouts/adminLayout';
 
 // Imports
-import DashboardSummary from './features/DashboardSummary/pages/Dashboard';
-import Onboarding from './features/SchoolOnboarding/pages/Onboarding';
-import Schools from './features/ListOfOnboardedSchools/pages/Schools';
+import { AuthPage } from './pages/AuthPage';
+import { useAuth } from './context/AuthContext';
+import AppRouter from './routes/AppRouter';
 
 function App() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* SINGLE PARENT ROUTE: The Layout */}
-        <Route path="/" element={<AdminLayout />}>
-
-          {/* CHILDREN ROUTES: The Pages */}
-          <Route index element={<Navigate to="/dashboard" replace />} />
-
-          <Route path="dashboard" element={<DashboardSummary />} />
-          <Route path="onboarding" element={<Onboarding />} />
-          <Route path="schools" element={<Schools />} />
-
-        </Route>
-
+        <Route path="/" element={<Navigate to="/auth" />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route
+          path="/*"
+          element={isAuthenticated ? <AppRouter /> : <Navigate to="/auth" />}
+        />
       </Routes>
     </BrowserRouter>
   );

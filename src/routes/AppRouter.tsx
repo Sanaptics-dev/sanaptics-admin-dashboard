@@ -17,10 +17,12 @@ const AppRouter = () => {
         <Route path="/schools" element={<Schools />} />
         <Route path="/schools/:id" element={<SchoolDetails />} />
         <Route path="/announcements/create" element={<Dashboard />} />
-        <Route path="/requests/manage" element={<Dashboard />} />
+        <Route path="/requests/manage" element={<AuthPage />} />
       </Route>
     </Routes>
   );
 };
 
 export default AppRouter;
+
+
