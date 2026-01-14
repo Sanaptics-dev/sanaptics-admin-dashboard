@@ -1,14 +1,10 @@
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRouter from './routes/AppRouter'; // your router with AdminLayout
 
-import { BrowserRouter } from "react-router-dom";
-import AppRouter from "./routes/AppRouter";
-
-const App = () => {
+export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <AppRouter />
-    </BrowserRouter>
+    </Router>
   );
-};
-
-export default App;
-
+}

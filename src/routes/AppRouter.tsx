@@ -1,10 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "../layouts/adminLayout";
-import Dashboard from "../pages/Dashboard";
-import Onboarding from "../pages/Onboarding";
-import Schools from "../pages/Schools";
-import SchoolDetails from "../pages/SchoolDetails";
-import { AuthPage } from "../pages/AuthPage";
+import Dashboard from "../features/DashboardSummary/pages/Dashboard";
+import Onboarding from "../features/SchoolOnboarding/pages/Onboarding";
+import Schools from "../features/ListOfOnboardedSchools/pages/Schools";
+import SchoolDetails from "../features/ListOfOnboardedSchools/pages/SchoolDetails";
 
 const AppRouter = () => {
   return (
