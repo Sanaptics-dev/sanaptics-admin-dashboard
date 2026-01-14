@@ -1,11 +1,19 @@
-import Sidebar from '@/components/Sidebar'; // Adjust path if needed
-import { Search, User, Outlet } from 'lucide-react';
-import { Outlet as RouterOutlet } from 'react-router-dom'; // <-- Import Outlet from router
+import { Outlet, Navigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
+import { useAuth } from "../context/AuthContext";
 
-// Note: Renaming imports if names collide, but here it's lucide vs router.
+const AdminLayout = () => {
+  const { isAuthenticated, loading } = useAuth();
 
-// CORRECTED COMPONENT
-export default function AdminLayout() {
+  if (loading) {
+    return null; 
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-50">
 
