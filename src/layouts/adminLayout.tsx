@@ -1,8 +1,19 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
+import { useAuth } from "../context/AuthContext";
 
 const AdminLayout = () => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return null; 
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       <Sidebar />
